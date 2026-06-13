@@ -1,3 +1,6 @@
+### Name: Sri muthazhagan P
+### Register Number: 2305002024
+
 # Ex-8: Implementation of SARSA Control Algorithm using FrozenLake Environment
 
 ## Aim:
