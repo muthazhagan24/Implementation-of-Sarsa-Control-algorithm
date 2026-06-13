@@ -1,14 +1,14 @@
-# Implementation of SARSA Control Algorithm using FrozenLake Environment
+# Ex-8: Implementation of SARSA Control Algorithm using FrozenLake Environment
 
-## Aim
+## Aim:
 
 To implement the SARSA (State-Action-Reward-State-Action) Control algorithm for learning the optimal policy in the FrozenLake environment using Reinforcement Learning.
 
 ---
 
-## Algorithm
+## Algorithm:
 
-### SARSA Control Algorithm
+### SARSA Control Algorithm:
 
 1. Import the required libraries.
 2. Create the FrozenLake environment using OpenAI Gym.
@@ -45,15 +45,22 @@ r + \gamma Q(s',a') - Q(s,a)
 
 ---
 
-## Program
+## Program:
 
-```
-import gymnasium as gym
+```python
+
+# ============================================================
+# SARSA CONTROL ALGORITHM
+# ============================================================
+
+import gym
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Create Environment
 env = gym.make("FrozenLake-v1", is_slippery=False)
 
+# Parameters
 alpha = 0.1
 gamma = 0.99
 epsilon = 1.0
@@ -62,11 +69,14 @@ epsilon_min = 0.01
 
 episodes = 15000
 
+# Q-table
 Q = np.zeros((env.observation_space.n,
               env.action_space.n))
 
+# Reward Tracking
 rewards_per_episode = []
 
+# Epsilon-Greedy Policy
 def choose_action(state):
 
     if np.random.rand() < epsilon:
@@ -74,6 +84,7 @@ def choose_action(state):
 
     return np.argmax(Q[state])
 
+# SARSA Training
 for episode in range(episodes):
 
     state, _ = env.reset()
@@ -92,6 +103,7 @@ for episode in range(episodes):
 
         next_action = choose_action(next_state)
 
+        # SARSA Update
         Q[state][action] = Q[state][action] + alpha * (
             reward
             + gamma * Q[next_state][next_action]
@@ -103,10 +115,16 @@ for episode in range(episodes):
 
         total_reward += reward
 
+    # Store rewards
     rewards_per_episode.append(total_reward)
 
+    # Decay epsilon
     epsilon = max(epsilon_min,
                   epsilon * epsilon_decay)
+
+# ============================================================
+# OPTIMAL POLICY
+# ============================================================
 
 print("\nLearned Optimal Policy:\n")
 
@@ -122,6 +140,10 @@ for state in range(env.observation_space.n):
     best_action = np.argmax(Q[state])
 
     print(f"State {state} --> {actions[best_action]}")
+
+# ============================================================
+# REWARD GRAPH
+# ============================================================
 
 moving_avg = np.convolve(
     rewards_per_episode,
@@ -139,15 +161,14 @@ plt.title("SARSA Learning Progress")
 
 plt.show()
 
-
-      
 ```
 
 ---
 
-## Output
+## Output:
 
-```
+```text
+
 Learned Optimal Policy:
 
 State 0 --> DOWN
@@ -156,11 +177,11 @@ State 2 --> LEFT
 State 3 --> LEFT
 State 4 --> DOWN
 State 5 --> LEFT
-State 6 --> DOWN
+State 6 --> LEFT
 State 7 --> LEFT
 State 8 --> RIGHT
-State 9 --> RIGHT
-State 10 --> DOWN
+State 9 --> DOWN
+State 10 --> LEFT
 State 11 --> LEFT
 State 12 --> LEFT
 State 13 --> RIGHT
@@ -171,14 +192,15 @@ State 15 --> LEFT
 
 ---
 
-## Output Graph
-
-<img width="1057" height="587" alt="image" src="https://github.com/user-attachments/assets/fbb50d55-5bb8-4524-b9c9-c726d3ed4bbe" />
+## Output Graph:
 
 The graph shows the reward obtained per episode during SARSA training. As training progresses, the rewards increase, indicating that the agent learns the optimal policy.
 
+<img width="1042" height="574" alt="image" src="https://github.com/user-attachments/assets/335453be-2995-48a4-a72e-edb13c4a27b6" />
+
+
 ---
 
-## Result
+## Result:
 
 Thus, the SARSA Control algorithm was successfully implemented in the FrozenLake environment. The agent learned the optimal action-value function and improved its performance through continuous interaction with the environment using on-policy Temporal Difference learning.
